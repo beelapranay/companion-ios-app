@@ -1,0 +1,9 @@
+*.xcodeproj/
+DerivedData/
+.build/
+.DS_Store
+Companion/Resources/CrisisClassifier.mlpackage/
+Companion/Resources/CrisisModel/
+Companion/Info.plist
+Companion/Companion.entitlements
+build/

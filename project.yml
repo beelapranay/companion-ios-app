@@ -1,0 +1,60 @@
+name: Companion
+options:
+  bundleIdPrefix: com.pranaybeela
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  CrisisKit:
+    path: CrisisKit
+  mlx-swift-lm:
+    path: ../mlx-swift-lm          # local clone, branch lfm3 (LFM3 support, not upstream yet)
+  swift-transformers:
+    url: https://github.com/huggingface/swift-transformers
+    from: 1.3.0
+  swift-huggingface:
+    url: https://github.com/huggingface/swift-huggingface
+    from: 0.9.0
+targets:
+  Companion:
+    type: application
+    platform: iOS
+    sources:
+      - path: Companion
+        excludes:
+          - Resources/CrisisModel
+      - path: Companion/Resources/CrisisModel
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - package: CrisisKit
+      - package: mlx-swift-lm
+        product: MLXLLM
+      - package: mlx-swift-lm
+        product: MLXLMCommon
+      - package: mlx-swift-lm
+        product: MLXHuggingFace
+      - package: swift-transformers
+        product: Tokenizers
+      - package: swift-huggingface
+        product: HuggingFace
+    entitlements:
+      path: Companion/Companion.entitlements
+      properties:
+        com.apple.developer.kernel.increased-memory-limit: true
+    info:
+      path: Companion/Info.plist
+      properties:
+        CFBundleDisplayName: Companion
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        LSApplicationQueriesSchemes: [tel, sms]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pranaybeela.companion
+        SWIFT_VERSION: "6.0"
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        DEVELOPMENT_TEAM: ""       # set your Apple ID team in Xcode (Signing & Capabilities)
+        TARGETED_DEVICE_FAMILY: "1"
+        COREML_CODEGEN_LANGUAGE: None   # CrisisKit loads the model; Xcode's generated class would shadow its name
