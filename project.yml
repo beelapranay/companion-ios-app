@@ -2,11 +2,17 @@ name: Companion
 options:
   bundleIdPrefix: com.pranaybeela
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "27.0"
   createIntermediateGroups: true
+settings:
+  base:
+    ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: YES
 packages:
   CrisisKit:
     path: CrisisKit
+  MemoryKit:
+    path: MemoryKit
   mlx-swift-lm:
     path: ../mlx-swift-lm          # local clone, branch lfm3 (LFM3 support, not upstream yet)
   swift-transformers:
@@ -23,11 +29,18 @@ targets:
       - path: Companion
         excludes:
           - Resources/CrisisModel
+          - Resources/FriendModel
       - path: Companion/Resources/CrisisModel
         type: folder
         buildPhase: resources
+      # the fine-tuned chat model (~945 MB), copied in by scripts/fetch_models.sh; see AppModel.useFineTuned
+      - path: Companion/Resources/FriendModel
+        type: folder
+        buildPhase: resources
+        optional: true
     dependencies:
       - package: CrisisKit
+      - package: MemoryKit
       - package: mlx-swift-lm
         product: MLXLLM
       - package: mlx-swift-lm
@@ -46,7 +59,7 @@ targets:
       path: Companion/Info.plist
       properties:
         CFBundleDisplayName: Companion
-        UILaunchScreen: {}
+        UILaunchScreen: {UIColorName: LaunchBackground, UIImageName: LaunchLogo}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         LSApplicationQueriesSchemes: [tel, sms]
     settings:
@@ -58,3 +71,31 @@ targets:
         DEVELOPMENT_TEAM: ""       # set your Apple ID team in Xcode (Signing & Capabilities)
         TARGETED_DEVICE_FAMILY: "1"
         COREML_CODEGEN_LANGUAGE: None   # CrisisKit loads the model; Xcode's generated class would shadow its name
+  # UI-only demo for the Simulator (MLX needs real Metal): the same views over PreviewChatModel's scripted replies.
+  # No chat model and no crisis layer, so never ship it.
+  CompanionDemo:
+    type: application
+    platform: iOS
+    sources:
+      - Companion/Shared
+      - Companion/Views
+      - Companion/Preview
+      - Companion/Assets.xcassets
+      - Companion/App/MemoryProviding.swift   # the memory views' protocol (MemoryKit types only, no MLX)
+      - Demo
+    dependencies:
+      - package: MemoryKit
+    info:
+      path: Demo/Info.plist
+      properties:
+        CFBundleDisplayName: Companion Demo
+        UILaunchScreen: {UIColorName: LaunchBackground, UIImageName: LaunchLogo}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        LSApplicationQueriesSchemes: [tel, sms]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pranaybeela.companion.demo
+        SWIFT_VERSION: "6.0"
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1"

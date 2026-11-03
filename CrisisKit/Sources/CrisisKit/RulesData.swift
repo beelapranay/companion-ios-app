@@ -101,7 +101,7 @@ enum RulesData {
     static let resource = #"\b(988|911|741741|hotline|helpline|lifeline|crisis (line|text|center|service)|samaritans|emergency (services|number|room)|text line|warmline)\b"#
     static let sentence = #"[^.!?\n]*[.!?]+[\"')\]]*|[^.!?\n]+$|\n"#
     static let phone = #"(?<![\w.])(\+?\d[\d\s().-]{1,14}\d)(?![\w.])"#
-    static let letter = #"\bdear \[?\w+"#
+    static let letter = #"\bdear \[?\w+|\b(hey|hi) kids\b|\bby the time you (read|see|find) this\b|\bi('m| am) writing (this|to you) (because|so)\b|\bi made a choice (that )?i can'?t (undo|take back)\b|\bi('ve| have)? ?had to make (a )?choices?\b|\bi had to (leave|go)\b|\bwhen i left\b|\bleaving means i can'?t\b|\bi('m| am) (so |really )?sorry (for what )?i had to\b|\bi love you (both|all)\b|\bgoodbye (forever|for good)\b"#
     static let allowedNumbers: Set<String> = ["112", "116123", "18002738255", "18006564673", "741741", "8002738255", "911", "988", "999"]
     static let tRisk = 0.267
     static let tCrisis = 0.138

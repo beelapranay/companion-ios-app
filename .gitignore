@@ -7,3 +7,7 @@ Companion/Resources/CrisisModel/
 Companion/Info.plist
 Companion/Companion.entitlements
 build/
+Demo/Info.plist
+build-demo/
+Companion/Resources/FriendModel/
+xcuserdata/
